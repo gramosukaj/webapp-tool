@@ -1,0 +1,5 @@
+# Build
+build/
+
+# Private files
+config.json
