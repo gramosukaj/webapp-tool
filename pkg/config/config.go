@@ -2,8 +2,11 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type Socials struct {
@@ -75,6 +78,8 @@ type Config struct {
 	Firebase           Firebase `json:"firebase" validate:"required"`
 }
 
+var validate *validator.Validate
+
 func NewConfig(path string) *Config {
 	configFile, err := os.Open(path)
 
@@ -93,5 +98,26 @@ func NewConfig(path string) *Config {
 	var config Config
 	json.Unmarshal(byteConfig, &config)
 
+	validate = validator.New()
+	err = validateStruct(&config)
+
+	if err != nil {
+		panic(err)
+	}
+
 	return &config
+}
+
+func validateStruct(c *Config) error {
+	err := validate.Struct(c)
+	if err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			fmt.Println(err.Namespace())
+			fmt.Println(err.Field() + " is " + err.Tag() + " and must be type of " + err.Type().Name())
+			fmt.Println()
+		}
+		return err
+	}
+	fmt.Println("Config file is valid")
+	return err
 }

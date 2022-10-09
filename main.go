@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gramosukaj/webtool-app/pkg/config"
+	"github.com/gramosukaj/webapp-tool/pkg/config"
 )
 
 func main() {
