@@ -1,13 +1,12 @@
 package main
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/gramosukaj/webapp-tool/pkg/config"
+	"github.com/gramosukaj/webapp-tool/pkg/utils"
 )
 
 func main() {
@@ -18,17 +17,7 @@ func main() {
 	}
 
 	config := config.NewConfig(configPath)
-	config.AppId = generateAppId(config.DirName)
+	config.AppId = utils.GenerateAppId(config.DirName)
 
 	fmt.Println(config.AppId)
-}
-
-func generateAppId(appName string) string {
-	bytes := make([]byte, 8)
-	if _, err := rand.Read(bytes); err != nil {
-		return ""
-	}
-	hex := hex.EncodeToString(bytes)
-
-	return (appName + "-webapp-" + hex)
 }
